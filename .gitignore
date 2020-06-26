@@ -1,0 +1,6 @@
+__pycache__/
+# Distribution / packaging
+.Python
+env/
+# for python 3 env
+env3/

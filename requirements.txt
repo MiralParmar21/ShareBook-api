@@ -1,0 +1,4 @@
+Django~=3.0.7
+mongoengine~=0.20.0
+django-rest-framework-mongoengine~=3.4.1
+django-rest-framework
