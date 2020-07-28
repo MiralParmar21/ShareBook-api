@@ -1,6 +1,16 @@
 from mongoengine import Document, fields, EmbeddedDocument
-# Create your models here.
+from datetime import datetime
+from string import ascii_lowercase
+from random import choice
+
+
 book_categories = ["Novel", "Science", "Space", "History"]
+
+
+def random_string(length=12):
+    letters = ascii_lowercase
+    result_str = ''.join(choice(letters) for i in range(length))
+    return result_str
 
 class BookInfo(Document):
     bookName = fields.StringField()
@@ -35,5 +45,19 @@ class User(Document):
     name = fields.EmbeddedDocumentField(Name, blank=True)
     home = fields.EmbeddedDocumentField(Address, blank=True, null=True)
     phoneNumber = fields.StringField(blank=True)
-    email = fields.EmailField(blank=False)
+    email = fields.EmailField(blank=False, unique=True)
+    password = fields.StringField(blank=False, unique=True)
 
+class Session(Document):
+    email = fields.ReferenceField(User)
+    access_token = fields.StringField(unique=True, default=random_string())
+    created_at = fields.DateTimeField(default=datetime.now())
+
+    meta = {
+        'indexes': [
+            {
+                'fields': ['created_at'],
+                'expireAfterSeconds': 30,  # 2 hours
+            },
+        ]
+    }
